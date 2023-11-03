@@ -42,13 +42,15 @@ const ProductListScreen: React.FC<{ route: any; navigation: any }> = ({ route, n
 
   useEffect(() => {
     // Cargar todos los productos
-    fetch('https://my-json-server.typicode.com/Maxwelljsm/SportStoreApp/products')
-      .then((response) => response.json())
-      .then((data) => {
-        setAllProducts(data);
-      })
-      .catch((error) => console.error('Error al cargar productos:', error));
-  }, []);
+    if (selectedCategory) {
+      fetch(`https://my-json-server.typicode.com/Maxwelljsm/SportStoreApp/products?categoryId=${selectedCategory.id}`)
+        .then((response) => response.json())
+        .then((data) => {
+          setAllProducts(data);
+        })
+        .catch((error) => console.error('Error al cargar productos:', error));
+    }
+  }, [selectedCategory]);
 
   useEffect(() => {
     // Filtrar los productos según la categoría seleccionada
