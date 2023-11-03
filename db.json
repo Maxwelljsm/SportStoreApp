@@ -37,7 +37,8 @@
     "productDetails": [
       {
         "productId": 1,
-        "stock": 50
+        "stock": 50,
+        "images": ["image1.jpg", "image2.jpg"]
       },
       {
         "productId": 2,
