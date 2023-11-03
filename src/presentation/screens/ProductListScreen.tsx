@@ -1,44 +1,45 @@
-import React from 'react';
-import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet } from 'react-native';
-
-const categories = [
-  { id: 1, name: 'Fútbol' },
-  { id: 2, name: 'Baloncesto' },
-  { id: 3, name: 'Atletismo' },
-];
-
-const productsByCategory = {
-  1: [
-    {
-      id: 1,
-      name: 'Camiseta de fútbol',
-      description: 'Camiseta oficial de la selección nacional.',
-      price: 25.0,
-    },
-    // Agrega más productos de fútbol aquí
-  ],
-  2: [
-    {
-      id: 2,
-      name: 'Balón de baloncesto',
-      description: 'Balón profesional de cuero.',
-      price: 20.0,
-    },
-    // Agrega más productos de baloncesto aquí
-  ],
-  3: [
-    {
-      id: 3,
-      name: 'Zapatillas deportivas',
-      description: 'Zapatillas para correr de alta calidad.',
-      price: 45.0,
-    },
-    // Agrega más productos de atletismo aquí
-  ],
-};
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 
 const ProductListScreen: React.FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
-  const [selectedCategory, setSelectedCategory] = React.useState(categories[0]); // Inicialmente selecciona la primera categoría
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [allProducts, setAllProducts] = useState([]);
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    // Cargar las categorías
+    fetch('https://my-json-server.typicode.com/Maxwelljsm/SportStoreApp/categories')
+      .then((response) => response.json())
+      .then((data) => {
+        setCategories(data);
+        if (data.length > 0) {
+          // Establecer la primera categoría como seleccionada
+          setSelectedCategory(data[0]);
+        }
+      })
+      .catch((error) => console.error('Error al cargar categorías:', error));
+  }, []);
+
+  useEffect(() => {
+    // Cargar todos los productos
+    fetch('https://my-json-server.typicode.com/Maxwelljsm/SportStoreApp/products')
+      .then((response) => response.json())
+      .then((data) => {
+        setAllProducts(data);
+      })
+      .catch((error) => console.error('Error al cargar productos:', error));
+  }, []);
+
+  useEffect(() => {
+    // Filtrar los productos según la categoría seleccionada
+    if (selectedCategory) {
+      const filteredProducts = allProducts.filter(
+        (product) => product.categoryId === selectedCategory.id
+      );
+      setProducts(filteredProducts);
+    }
+  }, [selectedCategory, allProducts]);
 
   return (
     <View style={styles.container}>
@@ -48,14 +49,14 @@ const ProductListScreen: React.FC<{ route: any; navigation: any }> = ({ route, n
             key={category.id}
             style={[
               styles.categoryButton,
-              category.id === selectedCategory.id ? styles.selectedCategory : null,
+              category.id === selectedCategory?.id ? styles.selectedCategory : null,
             ]}
             onPress={() => setSelectedCategory(category)}
           >
             <Text
               style={[
                 styles.categoryButtonText,
-                category.id === selectedCategory.id ? styles.selectedCategoryText : null,
+                category.id === selectedCategory?.id ? styles.selectedCategoryText : null,
               ]}
             >
               {category.name}
@@ -63,24 +64,27 @@ const ProductListScreen: React.FC<{ route: any; navigation: any }> = ({ route, n
           </TouchableOpacity>
         ))}
       </View>
-      <Text style={styles.categoryTitle}>{selectedCategory.name}</Text>
-      <FlatList
-        data={productsByCategory[selectedCategory.id]}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.productItem}>
-            {/* <Image source={item.image} /> */}
-            <Text style={styles.productName}>{item.name}</Text>
-            <Text style={styles.productPrice}>Precio: ${item.price}</Text>
-            <TouchableOpacity
-              style={styles.productButton}
-              onPress={() => navigation.navigate('ProductDetails', { product: item })}
-            >
-              <Text style={styles.buttonText}>Ver detalles</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      />
+      {selectedCategory && (
+        <>
+          <Text style={styles.categoryTitle}>{selectedCategory.name}</Text>
+          <FlatList
+            data={products}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <View style={styles.productItem}>
+                <Text style={styles.productName}>{item.name}</Text>
+                <Text style={styles.productPrice}>Precio: ${item.price}</Text>
+                <TouchableOpacity
+                  style={styles.productButton}
+                  onPress={() => navigation.navigate('ProductDetails', { product: item })}
+                >
+                  <Text style={styles.buttonText}>Ver detalles</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          />
+        </>
+      )}
     </View>
   );
 };
