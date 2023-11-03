@@ -1,11 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Button } from 'react-native';
+import AddProductModal from '../components/AddProductModal';
 
 const ProductListScreen: React.FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [allProducts, setAllProducts] = useState([]);
   const [products, setProducts] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  // Función para abrir el modal
+  const openModal = () => {
+    setModalVisible(true);
+  };
+
+  // Función para cerrar el modal
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+
+  // Función para manejar la adición de un nuevo producto
+  const handleAddProduct = (newProduct) => {
+    // Simular la adición del nuevo producto a la lista de productos
+    setProducts((prevProducts) => [...prevProducts, newProduct]);
+    closeModal();
+  };
 
   useEffect(() => {
     // Cargar las categorías
@@ -85,6 +104,13 @@ const ProductListScreen: React.FC<{ route: any; navigation: any }> = ({ route, n
           />
         </>
       )}
+      <Button title="Agregar Producto" onPress={openModal} />
+      <AddProductModal
+        visible={modalVisible}
+        onClose={closeModal}
+        selectedCategory={selectedCategory}
+        onAddProduct={handleAddProduct}
+      />
     </View>
   );
 };
@@ -104,10 +130,10 @@ const styles = StyleSheet.create({
     padding: 10,
     margin: 5,
     borderRadius: 5,
-    backgroundColor: 'blue', // Color de fondo de los botones de categoría
+    backgroundColor: 'gray', // Color de fondo de los botones de categoría
   },
   selectedCategory: {
-    backgroundColor: 'green', // Color de fondo cuando la categoría está seleccionada
+    backgroundColor: 'white', // Color de fondo cuando la categoría está seleccionada
   },
   categoryButtonText: {
     color: 'white',
@@ -134,7 +160,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   productButton: {
-    backgroundColor: 'blue', // Color del botón
+    backgroundColor: 'gray', // Color del botón
     padding: 10,
     borderRadius: 5,
     alignItems: 'center',
