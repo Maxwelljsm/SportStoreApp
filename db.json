@@ -46,7 +46,21 @@
       "categoryId": 3,
       "image": "https://plazavea.vteximg.com.br/arquivos/ids/19512053-512-512/imageUrl_2.jpg"
     }
-  ],  
+  ], 
+  "productDetails": [
+    {
+      "productId": 1,
+      "stock": 50
+    },
+    {
+      "productId": 2,
+      "stock": 30
+    },
+    {
+      "productId": 3,
+      "stock": 40
+    }
+  ],
   "quotations": [
     {
       "id": 1,
