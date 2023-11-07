@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Button } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Button, Image } from 'react-native';
 import AddProductModal from '../components/AddProductModal';
 
 const ProductListScreen: React.FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
@@ -93,8 +93,11 @@ const ProductListScreen: React.FC<{ route: any; navigation: any }> = ({ route, n
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
               <View style={styles.productItem}>
-                <Text style={styles.productName}>{item.name}</Text>
-                <Text style={styles.productPrice}>Precio: ${item.price}</Text>
+                <View style={styles.productInfo}>
+                  <Text style={styles.productName}>{item.name}</Text>
+                  <Text style={styles.productPrice}>Precio: ${item.price}</Text>
+                </View>
+                <Image style={styles.productImage} source={{ uri: item.image }} />
                 <TouchableOpacity
                   style={styles.productButton}
                   onPress={() => navigation.navigate('ProductDetails', { product: item })}
@@ -150,7 +153,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   productItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 20,
+  },
+  productInfo: {
+    flex: 1,
   },
   productName: {
     fontSize: 18,
@@ -160,6 +169,10 @@ const styles = StyleSheet.create({
   productPrice: {
     fontSize: 16,
     color: 'white',
+  },
+  productImage: {
+    width: 100,
+    height: 100,
   },
   productButton: {
     backgroundColor: 'gray', // Color del botón

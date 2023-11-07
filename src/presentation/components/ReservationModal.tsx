@@ -71,7 +71,7 @@ const ReservationModal = ({ product, availableStock, visible, onClose, onReserve
           onReserve(data);
           onClose();
           // Navega a la pantalla de reservaciones
-          navigation.navigate('Reservations'); // Asegúrate de que la clave coincida con tu configuración de navegación
+          navigation.navigate('Reservation'); // Asegúrate de que la clave coincida con tu configuración de navegación
         })
         .catch((error) => console.error('Error al guardar la reserva:', error));
     }
@@ -85,6 +85,7 @@ const ReservationModal = ({ product, availableStock, visible, onClose, onReserve
           <Text style={styles.detail}>Nombre del Producto: {product.name}</Text>
           <Text style={styles.detail}>Stock Disponible: {availableStock} unidades</Text>
           <Text style={styles.detail}>Cantidad a Reservar:</Text>
+          <Text style={styles.detail}>Ubicación: {userLocation ? `${userLocation.latitude}, ${userLocation.longitude}` : 'Obteniendo ubicación...'}</Text>
           <TextInput
             style={styles.input}
             placeholder="Cantidad a reservar"

@@ -19,48 +19,34 @@
       "name": "Camiseta de fútbol",
       "description": "Camiseta oficial de la selección nacional.",
       "price": 25.0,
-      "categoryId": 1
+      "categoryId": 1,
+      "image": "https://amigosmcs.com/cdn/shop/files/11_7a68ac2d-a561-4e4d-8034-9b2f6f060356.jpg"
     },
     {
       "id": 2,
       "name": "Balón de fútbol",
       "description": "Balón profesional de cuero.",
       "price": 20.0,
-      "categoryId": 1
+      "categoryId": 1,
+      "image": "https://winnerdeportivos.com/wp-content/uploads/2019/02/Balon-futbol-024-scaled.jpg"
     },
     {
       "id": 3,
       "name": "Balón de baloncesto",
       "description": "Balón oficial de la NBA.",
       "price": 22.0,
-      "categoryId": 2
+      "categoryId": 2,
+      "image": "https://img.freepik.com/vector-gratis/pelota-baloncesto-aislada_1284-42545.jpg"
     },
     {
       "id": 4,
       "name": "Zapatillas deportivas",
       "description": "Zapatillas para correr de alta calidad.",
       "price": 45.0,
-      "categoryId": 3
+      "categoryId": 3,
+      "image": "https://plazavea.vteximg.com.br/arquivos/ids/19512053-512-512/imageUrl_2.jpg"
     }
-  ],
-  "productDetails": [
-    {
-      "productId": 1,
-      "stock": 50,
-      "images": [
-        "image1.jpg",
-        "image2.jpg"
-      ]
-    },
-    {
-      "productId": 2,
-      "stock": 30
-    },
-    {
-      "productId": 3,
-      "stock": 40
-    }
-  ],
+  ],  
   "quotations": [
     {
       "id": 1,
