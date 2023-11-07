@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { View, Text, StyleSheet, Button, Image } from 'react-native';
 import ReservationModal from '../components/ReservationModal';
 
 const ProductDetailsScreen: React.FC<{ route: any }> = ({ route }) => {
@@ -34,8 +34,8 @@ const ProductDetailsScreen: React.FC<{ route: any }> = ({ route }) => {
     fetch(`https://my-json-server.typicode.com/Maxwelljsm/SportStoreApp/productDetails?productId=${product.id}`)
       .then((response) => response.json())
       .then((data) => {
-        if (data[0].stock) {
-          setStock(data[0].stock);
+        if (data.stock) {
+          setStock(data.stock);
         }
       })
       .catch((error) => console.error('Error al cargar el stock del producto:', error));
@@ -43,6 +43,7 @@ const ProductDetailsScreen: React.FC<{ route: any }> = ({ route }) => {
 
   return (
     <View style={styles.container}>
+      <Image style={styles.productImage} source={{ uri: product.image }} />
       <Text style={styles.title}>Detalles del Producto</Text>
       <Text style={styles.detail}>Nombre del Producto: {product.name}</Text>
       <Text style={styles.detail}>Precio: ${product.price}</Text>
@@ -53,7 +54,7 @@ const ProductDetailsScreen: React.FC<{ route: any }> = ({ route }) => {
         availableStock={stock}
         visible={modalVisible}
         onClose={closeModal}
-        onReserve={handleUpdateReservations} // Pasa la función de actualización
+        onReserve={handleUpdateReservations}
         reservationAmount={reservationAmount}
         setReservationAmount={setReservationAmount}
       />
@@ -66,6 +67,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#121212', // Fondo oscuro
     padding: 20,
+  },
+  productImage: {
+    width: 200, // Ajusta el ancho de la imagen según tus necesidades
+    height: 200, // Ajusta la altura de la imagen según tus necesidades
+    alignSelf: 'center', // Centra la imagen en el medio de la pantalla
+    marginBottom: 10, // Agrega un margen inferior
   },
   title: {
     fontSize: 24,
