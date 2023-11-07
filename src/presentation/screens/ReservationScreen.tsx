@@ -64,6 +64,8 @@ const ReservationScreen: React.FC<{ route: any }> = ({ route }) => {
                 <Text style={styles.detail}>Precio: {productDetails ? `$${productDetails.price}` : 'Cargando...'}</Text>
                 <Text style={styles.detail}>Usuario: {selectedReservation.userName}</Text>
                 <Text style={styles.detail}>Cantidad: {selectedReservation.quantity}</Text>
+                <Text style={styles.detail}>Latitud: {selectedReservation.latitude}</Text>
+                <Text style={styles.detail}>Longitud: {selectedReservation.longitude}</Text>
                 {/* Agrega más detalles de la reserva según tus necesidades */}
               </View>
             )}

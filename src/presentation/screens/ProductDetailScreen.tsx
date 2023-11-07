@@ -20,20 +20,12 @@ const ProductDetailsScreen: React.FC<{ route: any }> = ({ route }) => {
     setModalVisible(false);
   };
 
-  // Función para manejar la reserva del producto
-  const handleReserveProduct = () => {
-    // Validar que la cantidad de reserva no sea mayor que el stock disponible
-    if (reservationAmount > stock) {
-      alert('La cantidad de reserva no puede ser mayor que el stock disponible.');
-      return;
-    }
+  const [reservations, setReservations] = useState([]);
 
-    // Simulación: Restar la cantidad reservada al stock actual
-    const updatedStock = stock - reservationAmount;
-    setStock(updatedStock);
-
-    // Cerrar el modal y reiniciar la cantidad de reserva
-    closeModal();
+  // Función para manejar la actualización de la lista de reservas
+  const handleUpdateReservations = (newReservation) => {
+    // Agrega la nueva reserva a la lista de reservas
+    setReservations((prevReservations) => [...prevReservations, newReservation]);
   };
 
   // UseEffect para cargar el stock del producto
@@ -61,7 +53,7 @@ const ProductDetailsScreen: React.FC<{ route: any }> = ({ route }) => {
         availableStock={stock}
         visible={modalVisible}
         onClose={closeModal}
-        onReserve={handleReserveProduct}
+        onReserve={handleUpdateReservations} // Pasa la función de actualización
         reservationAmount={reservationAmount}
         setReservationAmount={setReservationAmount}
       />

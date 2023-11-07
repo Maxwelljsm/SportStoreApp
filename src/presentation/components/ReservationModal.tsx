@@ -1,15 +1,79 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Button, Modal, StyleSheet, TextInput } from 'react-native';
+import { check, PERMISSIONS, RESULTS, request } from 'react-native-permissions';
+import { useNavigation } from '@react-navigation/native';
+import Geolocation from 'react-native-geolocation-service';
 
 const ReservationModal = ({ product, availableStock, visible, onClose, onReserve, reservationAmount, setReservationAmount }) => {
+  const [userLocation, setUserLocation] = useState(null);
+  const navigation = useNavigation(); // Obtiene el objeto de navegación
+
+  useEffect(() => {
+    const checkLocationPermission = async () => {
+      const locationPermissionStatus = await check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+
+      if (locationPermissionStatus === RESULTS.GRANTED) {
+        Geolocation.getCurrentPosition(
+          (position) => {
+            setUserLocation(position.coords);
+          },
+          (error) => {
+            console.error('Error al obtener la ubicación:', error);
+          },
+          { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+        );
+      } else if (locationPermissionStatus === RESULTS.DENIED) {
+        const result = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+
+        if (result === RESULTS.GRANTED) {
+          Geolocation.getCurrentPosition(
+            (position) => {
+              setUserLocation(position.coords);
+            },
+            (error) => {
+              console.error('Error al obtener la ubicación:', error);
+            },
+            { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+          );
+        } else {
+          console.log('Permisos de ubicación no concedidos');
+        }
+      }
+    };
+
+    checkLocationPermission();
+  }, []);
+
   const handleReserveProduct = () => {
     if (reservationAmount <= 0) {
       alert('La cantidad de reserva debe ser mayor que 0.');
     } else if (reservationAmount > availableStock) {
       alert('La cantidad de reserva no puede ser mayor que el stock disponible.');
+    } else if (!userLocation) {
+      alert('No se pudo obtener la ubicación del dispositivo.');
     } else {
-      onReserve(reservationAmount);
-      onClose();
+      const newReservation = {
+        productId: product.id,
+        quantity: reservationAmount,
+        userName: 'Nombre de usuario',
+        userLocation,
+      };
+
+      fetch('https://my-json-server.typicode.com/Maxwelljsm/SportStoreApp/reservations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newReservation),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          onReserve(data);
+          onClose();
+          // Navega a la pantalla de reservaciones
+          navigation.navigate('Reservations'); // Asegúrate de que la clave coincida con tu configuración de navegación
+        })
+        .catch((error) => console.error('Error al guardar la reserva:', error));
     }
   };
 
@@ -43,7 +107,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.7)', // Fondo oscuro
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
   },
   modalContent: {
     width: '80%',
@@ -72,20 +136,6 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-  },
-  addButton: {
-    backgroundColor: 'blue',
-    padding: 10,
-    borderRadius: 5,
-  },
-  cancelButton: {
-    backgroundColor: 'gray',
-    padding: 10,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: 'white',
-    textAlign: 'center',
   },
 });
 
